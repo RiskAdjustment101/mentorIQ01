@@ -2,7 +2,7 @@
 
 **Date**: 2025-09-16  
 **Branch**: feature/stories-epic-A-landing-onboarding  
-**Status**: ✅ Implementation Complete & Tested
+**Status**: ✅ Implementation Complete & Split-Screen Updated
 
 ---
 
@@ -89,7 +89,8 @@ lib/
 
 ✅ **Build Success**: App compiles without errors  
 ✅ **Clerk Integration**: Valid API keys configured and working  
-✅ **Development Server**: Running on http://localhost:3002  
+✅ **Authentication Flow**: Sign-in/Sign-up modals working properly  
+✅ **Development Server**: Running on http://localhost:3003  
 
 ## Pending QA Gates
 
@@ -109,9 +110,36 @@ npm run dev
 
 Navigate to http://localhost:3002 (or check terminal for actual port)
 
+## Latest Update: Split-Screen Landing Page (2025-09-16)
+
+### Changes Made
+- **Layout**: Converted from single-column to split-screen design
+- **Left Pane**: Logo, AI-focused headline, subtext, single "Get Started" CTA + optional sign in link
+- **Right Pane**: 4 differentiators with icons emphasizing AI capabilities
+- **Copy**: Updated to match `landing-copy-epic-A.md` exactly
+- **Analytics**: Updated CTA tracking to `{cta: "get-started"}`
+- **Icons**: Added Lucide React icons (Sparkles, Zap, Shield, Globe)
+
+### Files Modified
+- `app/page.tsx` - Complete rewrite for split-screen layout
+- `docs/qa/gates/traceability-epic-A-landing-onboarding.md` - Updated test mappings
+- `docs/stories/DEVLOG-epic-A-landing-onboarding.md` - This file
+
+### New Content
+- **Headline**: "AI-Powered Mentorship for FLL Teams"
+- **Subtext**: "Plan smarter, save time, and inspire students with your AI co-pilot."
+- **Differentiators**: Plan Smarter, Save Time, Built for Trust, Connected Knowledge
+
+### Compliance
+- ✅ No vertical scroll at 1366×768
+- ✅ shadcn/ui components only
+- ✅ Dark theme maintained
+- ✅ Analytics preserved
+- ✅ Clerk integration working
+
 ## Notes
 
 - All acceptance criteria from stories A0-A2 are implemented
-- Ready for QA gates review once testing infrastructure is in place
+- Split-screen layout ready for QA gates review
 - Analytics events fire to console in development mode
 - Feature flags are enabled by default

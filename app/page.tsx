@@ -3,11 +3,10 @@
 import { useEffect } from 'react'
 import { useRouter } from 'next/navigation'
 import { Button } from '@/components/ui/button'
-import { Separator } from '@/components/ui/separator'
 import { analytics } from '@/lib/analytics'
 import { isFeatureEnabled } from '@/lib/feature-flags'
 import { useClerk } from '@clerk/nextjs'
-import { CheckCircle } from 'lucide-react'
+import { Sparkles, Zap, Shield, Globe } from 'lucide-react'
 
 export default function LandingPage() {
   const router = useRouter()
@@ -19,6 +18,15 @@ export default function LandingPage() {
     }
   }, [])
 
+  const handleGetStarted = () => {
+    analytics.track('landing.cta.click', { cta: 'get-started' })
+    analytics.track('auth.start', { method: 'clerk' })
+    openSignUp({
+      afterSignInUrl: '/dashboard',
+      afterSignUpUrl: '/dashboard',
+    })
+  }
+
   const handleSignIn = () => {
     analytics.track('landing.cta.click', { cta: 'signin' })
     analytics.track('auth.start', { method: 'clerk' })
@@ -28,82 +36,116 @@ export default function LandingPage() {
     })
   }
 
-  const handleCreateAccount = () => {
-    analytics.track('landing.cta.click', { cta: 'create' })
-    analytics.track('auth.start', { method: 'clerk' })
-    openSignUp({
-      afterSignInUrl: '/dashboard',
-      afterSignUpUrl: '/dashboard',
-    })
-  }
-
-  const bullets = [
-    'Plan weekly sessions',
-    'Assign & track tasks',
-    'Share parent digests',
+  const differentiators = [
+    {
+      icon: Sparkles,
+      title: 'Plan Smarter',
+      description: 'AI drafts session agendas and checklists instantly',
+    },
+    {
+      icon: Zap,
+      title: 'Save Time',
+      description: 'One-click setup; focus on mentoring, not admin',
+    },
+    {
+      icon: Shield,
+      title: 'Built for Trust',
+      description: 'Secure logins, parental consent, and compliance baked in',
+    },
+    {
+      icon: Globe,
+      title: 'Connected Knowledge',
+      description: 'Access proven playbooks and insights from experts',
+    },
   ]
 
   return (
-    <div className="min-h-screen flex flex-col items-center justify-center px-8 py-12">
-      <div className="w-full max-w-2xl mx-auto flex flex-col items-center text-center space-y-8">
-        {/* Logo/Brand */}
-        <div className="flex items-center justify-center mb-4">
-          <span className="text-3xl font-bold text-primary">MentorIQ</span>
-        </div>
+    <div className="min-h-screen flex">
+      {/* Left Pane - Hero/Action */}
+      <div className="flex-1 flex flex-col justify-center px-12 lg:px-20">
+        <div className="max-w-xl mx-auto lg:mx-0">
+          {/* Logo/Brand - Bold and Confident */}
+          <div className="mb-12">
+            <span className="text-4xl lg:text-5xl font-black text-primary tracking-tight">
+              MentorIQ
+            </span>
+          </div>
 
-        {/* H1 - Main headline */}
-        <h1 className="text-4xl md:text-5xl font-bold tracking-tight">
-          Mentoring, made simple.
-        </h1>
+          {/* Hero Content - Nike-style Bold Hierarchy */}
+          <div className="space-y-10">
+            {/* Headline - Maximum Impact with Perfect Spacing */}
+            <h1 className="text-5xl lg:text-7xl font-black leading-[0.85] tracking-[-0.02em]">
+              <div className="mb-2">
+                <span className="text-muted-foreground">AI-Powered</span>
+              </div>
+              <div className="mb-3">
+                <span className="text-primary bg-gradient-to-r from-primary to-primary/80 bg-clip-text text-transparent">
+                  Mentorship
+                </span>
+              </div>
+              <div className="text-foreground">
+                for <span className="italic font-light">FLL</span> Teams
+              </div>
+            </h1>
 
-        {/* Subtext */}
-        <p className="text-lg md:text-xl text-muted-foreground max-w-xl">
-          Plan sessions, track progress, and keep parents in the loop — all in minutes.
-        </p>
+            {/* Subtext - Confident and Clear */}
+            <p className="text-xl lg:text-2xl text-muted-foreground font-medium leading-relaxed max-w-lg">
+              Plan smarter, save time, and inspire students with your AI co-pilot.
+            </p>
 
-        {/* Bullets */}
-        <div className="flex flex-col sm:flex-row gap-4 sm:gap-8 items-center justify-center text-sm md:text-base">
-          {bullets.map((bullet, index) => (
-            <div key={index} className="flex items-center gap-2">
-              <CheckCircle className="h-5 w-5 text-primary flex-shrink-0" />
-              <span>{bullet}</span>
+            {/* Primary CTA - Bold Action */}
+            <div className="space-y-6 pt-4">
+              <Button
+                size="lg"
+                onClick={handleGetStarted}
+                className="px-12 py-8 text-xl font-bold bg-primary hover:bg-primary/90 rounded-xl shadow-2xl transform hover:scale-105 transition-all duration-200"
+                aria-label="Get started with MentorIQ"
+              >
+                Get Started
+              </Button>
+
+              {/* Optional Sign In Link - Subtle but Present */}
+              <div className="text-base">
+                <button
+                  onClick={handleSignIn}
+                  className="text-muted-foreground hover:text-primary transition-colors font-medium"
+                >
+                  Already have an account? <span className="underline">Sign in</span>
+                </button>
+              </div>
             </div>
-          ))}
+          </div>
         </div>
+      </div>
 
-        <Separator className="w-32" />
+      {/* Right Pane - Marketing Differentiators */}
+      <div className="flex-1 flex flex-col justify-center px-12 lg:px-20 bg-secondary/20">
+        <div className="max-w-xl mx-auto lg:mx-0">
+          {/* Section Header */}
+          <div className="mb-16">
+            <h2 className="text-3xl lg:text-4xl font-bold text-foreground mb-4">
+              Why Choose MentorIQ?
+            </h2>
+            <div className="w-16 h-1 bg-primary"></div>
+          </div>
 
-        {/* CTAs */}
-        <div className="flex flex-col sm:flex-row gap-4 w-full sm:w-auto">
-          <Button
-            size="lg"
-            onClick={handleSignIn}
-            className="w-full sm:w-auto px-8 py-6 text-base font-semibold bg-primary hover:bg-primary/90"
-            aria-label="Sign in to MentorIQ"
-          >
-            Sign in
-          </Button>
-          <Button
-            size="lg"
-            variant="outline"
-            onClick={handleCreateAccount}
-            className="w-full sm:w-auto px-8 py-6 text-base font-semibold border-border hover:bg-secondary"
-            aria-label="Create a new MentorIQ account"
-          >
-            Create account
-          </Button>
-        </div>
-
-        {/* Footer with minimal legal links */}
-        <div className="pt-8 text-xs text-muted-foreground">
-          <div className="flex items-center justify-center gap-4">
-            <a href="/privacy" className="hover:text-foreground transition-colors">
-              Privacy
-            </a>
-            <Separator orientation="vertical" className="h-3" />
-            <a href="/terms" className="hover:text-foreground transition-colors">
-              Terms
-            </a>
+          {/* Differentiators - Nike-style Confidence */}
+          <div className="space-y-12">
+            {differentiators.map((item, index) => (
+              <div key={index} className="flex items-start gap-6 group">
+                <div className="flex-shrink-0 p-3 bg-primary/10 rounded-xl group-hover:bg-primary/20 transition-colors">
+                  <item.icon className="h-8 w-8 text-primary" />
+                </div>
+                <div className="flex-1">
+                  <h3 className="text-xl lg:text-2xl font-bold text-foreground mb-3 group-hover:text-primary transition-colors">
+                    {item.title}
+                  </h3>
+                  <p className="text-base lg:text-lg text-muted-foreground leading-relaxed font-medium">
+                    {item.description}
+                  </p>
+                </div>
+              </div>
+            ))}
           </div>
         </div>
       </div>
