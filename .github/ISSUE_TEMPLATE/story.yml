@@ -1,0 +1,15 @@
+name: Story
+description: Track development of a BMAD Story
+title: "[Story] {{ story-name }}"
+labels: [story]
+body:
+  - type: input
+    id: story-file
+    attributes:
+      label: Link to Story Doc
+      description: Path in /docs/stories/
+  - type: textarea
+    id: acceptance
+    attributes:
+      label: Acceptance Criteria
+      description: Copy from story markdown

@@ -1,0 +1,40 @@
+name: Sync BMAD Docs to GitHub Issues
+on:
+  push:
+    paths:
+      - "docs/stories/*.md"
+      - "docs/qa/assessments/*.md"
+
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Parse Stories & QA
+        uses: actions/github-script@v6
+        with:
+          script: |
+            const fs = require('fs');
+            const path = require('path');
+            const stories = fs.readdirSync('docs/stories');
+            for (const f of stories) {
+              const content = fs.readFileSync(path.join('docs/stories', f), 'utf8');
+              const title = `[Story] ${f}`;
+              // check if issue exists
+              const issues = await github.rest.issues.listForRepo({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                labels: 'story'
+              });
+              const exists = issues.data.find(i => i.title === title);
+              if (!exists) {
+                await github.rest.issues.create({
+                  owner: context.repo.owner,
+                  repo: context.repo.repo,
+                  title,
+                  body: content,
+                  labels: ['story']
+                });
+              }
+            }

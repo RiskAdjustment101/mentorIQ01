@@ -1,0 +1,14 @@
+name: QA Assessment
+description: Track QA gates for a Story
+title: "[QA] {{ story-id }}"
+labels: [qa]
+body:
+  - type: input
+    id: story-link
+    attributes:
+      label: Story File
+  - type: dropdown
+    id: gate
+    attributes:
+      label: Gate Type
+      options: [Risk, Design, Test-Design, NFR, Review]
