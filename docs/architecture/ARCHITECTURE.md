@@ -47,7 +47,7 @@ flowchart LR
 | Auth | **Clerk** | SSO, orgs, MFA | Auth0, Cognito |
 | API style | **REST via Next Route Handlers** | Simpler, OpenAPI-friendly | tRPC, GraphQL |
 | Validation | **Zod (web)** / **Pydantic (AI svc)** | End-to-end validation | Valibot, Marshmallow |
-| DB | **Postgres** (Neon/Supabase) | Serverless PG, low ops | RDS, Cloud SQL |
+| DB | **Postgres (Neon)** | Serverless PG, RLS, audit control (ADR-003) | Supabase, RDS, Cloud SQL |
 | ORM | **Prisma** | Type-safe, migrations | Drizzle, Knex |
 | Cache | **Upstash Redis** | Serverless, edge-friendly | ElastiCache, MemoryStore |
 | Storage | **Supabase Storage / S3** | Simple reports | R2, GCS |
@@ -63,7 +63,7 @@ flowchart LR
 ---
 
 ## 4. SaaS-First Scope (Phase 1)
-**Domain (v1 minimal)**: Users, Teams, TeamMembers, Sessions, Tasks, Reports, Consents, AuditEvents  
+**Domain (v1 minimal)**: Users, Teams, TeamMembers, Sessions, Tasks, Reports, Consents, AuditEvents
 
 **Public API (OpenAPI v1)**:
 - `GET /v1/me`
@@ -74,55 +74,62 @@ flowchart LR
 - `POST /v1/consents` ; `GET /v1/consents/{childRef}`
 - `GET /v1/audit?teamId=...`
 
-**Security**: Clerk JWT → RBAC/tenancy checks; consent enforced; rate limits.  
+**Security**: Clerk JWT → RBAC/tenancy checks; consent enforced; rate limits.
 
 ---
 
 ## 5. AI Layer (Phase 2, on top)
 - **Service**: Python FastAPI `ai-gateway` (stateless).
-- **Capabilities**:  
-  - Read tools (`get_team_state`, `get_docs`)  
-  - Generate (`generate_session_plan`)  
-  - Summarize (`summarize_for_parents`)  
-- **Writeback**: Two-phase commit (proposal → confirm → commit).  
-- **Retrieval**: pgvector index over approved docs.  
-- **Guardrails**: Schema outputs, citations required, prompt redaction.  
+- **Capabilities**:
+  - Read tools (`get_team_state`, `get_docs`)
+  - Generate (`generate_session_plan`)
+  - Summarize (`summarize_for_parents`)
+- **Writeback**: Two-phase commit (proposal → confirm → commit).
+- **Retrieval**: pgvector index over approved docs.
+- **Guardrails**: Schema outputs, citations required, prompt redaction.
 
 ---
 
 ## 6. Environments & Ops
-- **Envs**: dev → staging → prod (feature flags for AI).  
-- **Secrets**: managed in Vercel/Fly vaults.  
-- **Backups**: scheduled snapshots; object lifecycle rules.  
-- **DR**: runbooks + RTO/RPO targets.  
+- **Envs**: dev → staging → prod (feature flags for AI).
+- **Secrets**: managed in Vercel/Fly vaults.
+- **Backups**: scheduled snapshots; object lifecycle rules.
+- **DR**: runbooks + RTO/RPO targets.
 
 ---
 
 ## 7. Delivery Plan
-- **Milestone A (Weeks 1–2)** — SaaS skeleton  
-- **Milestone B (Weeks 3–4)** — Hardening (RBAC, rate limits, observability)  
-- **Milestone C (Weeks 5–6)** — AI read/generate (RAG + proposals)  
-- **Milestone D (Weeks 7–8)** — Summaries, telemetry, pilot rollout  
+- **Milestone A (Weeks 1–2)** — SaaS skeleton
+- **Milestone B (Weeks 3–4)** — Hardening (RBAC, rate limits, observability)
+- **Milestone C (Weeks 5–6)** — AI read/generate (RAG + proposals)
+- **Milestone D (Weeks 7–8)** — Summaries, telemetry, pilot rollout
 
 ---
 
 ## 8. Governance & Compliance
-- **Consent-first architecture**.  
-- **Immutable audit** on all mutating calls.  
-- **Data minimization** in prompts.  
-- **Least privilege** service accounts.  
-- **Access reviews** as standard ops.  
+- **Consent-first architecture**.
+- **Immutable audit** on all mutating calls.
+- **Data minimization** in prompts.
+- **Least privilege** service accounts.
+- **Access reviews** as standard ops.
 
 ---
 
 ## 9. Open Questions
-- Neon vs Supabase for storage needs?  
-- REST-only vs GraphQL/tRPC later?  
-- Azure OpenAI vs OpenAI (procurement)?  
-- Feature flag provider?  
-- Where to host ai-gateway (Fly vs Render)?  
+- Neon vs Supabase for storage needs?
+- REST-only vs GraphQL/tRPC later?
+- Azure OpenAI vs OpenAI (procurement)?
+- Feature flag provider?
+- Where to host ai-gateway (Fly vs Render)?
 
 ---
 
 ## 10. One-Page Summary
 **Thesis**: Build a **contract-first SaaS** that is useful on its own; then expose typed, audited capabilities to an **AI overlay** that is constrained, cited, and reversible. This separates *facts & compliance* (SaaS) from *assistive intelligence* (AI), enabling speed without sacrificing trust.
+
+---
+
+## References
+- ADR-001 — Core Tech Decisions
+- ADR-002 — Security & OpenAPI Standards
+- ADR-003 — Neon vs Supabase

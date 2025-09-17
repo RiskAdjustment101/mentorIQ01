@@ -1,7 +1,8 @@
+# ADR-001 — Core Tech Decisions
 # ADR-001 — Tech Decisions for MentorIQ (SaaS-first, AI-on-top)
 
-**Status**: Accepted  
-**Date**: 2025-09-16  
+**Status**: Accepted
+**Date**: 2025-09-16
 **Owner**: Architecture
 
 ---

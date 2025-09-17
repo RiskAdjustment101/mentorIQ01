@@ -1,7 +1,9 @@
+# ADR-002 — Security & OpenAPI Standards
+
 # ADR-002 — Security & Compliance + OpenAPI v1 Outline (MentorIQ)
 
-**Status**: Accepted  
-**Date**: 2025-09-16  
+**Status**: Accepted
+**Date**: 2025-09-16
 **Owner**: Architecture
 
 ---
@@ -49,8 +51,8 @@
 - **Right to deletion**: subject to legal constraints; minors’ data removable upon verified request; audit may be retained as legally required.
 
 ### A7. Transport & Storage
-- TLS 1.2+; HSTS; strict CSP.  
-- Encryption at rest for DB & object storage.  
+- TLS 1.2+; HSTS; strict CSP.
+- Encryption at rest for DB & object storage.
 - Secrets in managed vaults; key rotation policy.
 
 ---
@@ -58,11 +60,11 @@
 ## Part B — OpenAPI v1 Outline (contract-first)
 
 ### B1. Meta
-- **OpenAPI**: 3.1  
-- **Servers**: `/dev`, `/staging`, `/prod`  
-- **SecuritySchemes**:  
-  - `clerkSession`: HTTP Bearer (Clerk JWT)  
-  - `serviceKey`: HTTP Bearer (internal service-to-service, for background jobs)  
+- **OpenAPI**: 3.1
+- **Servers**: `/dev`, `/staging`, `/prod`
+- **SecuritySchemes**:
+  - `clerkSession`: HTTP Bearer (Clerk JWT)
+  - `serviceKey`: HTTP Bearer (internal service-to-service, for background jobs)
 - **Global headers**: `x-request-id`, `x-correlation-id`
 
 ### B2. Common Models
